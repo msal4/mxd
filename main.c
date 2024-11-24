@@ -22,9 +22,11 @@ void write_buf(char *buf, size_t size)
 int main(int argc, char **argv)
 {
 	FILE *f = NULL;
-	if (argc > 1) {
+	if (argc > 1)
+	{
 		f = fopen(argv[1], "r");
-	} else if (argc == 1) {
+	} else if (argc == 1)
+	{
 		f = stdin;
 	}
 
