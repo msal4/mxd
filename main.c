@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/errno.h>
+#include <fcntl.h>
 
 void write_buf(char *buf, size_t size)
 {
@@ -21,16 +22,16 @@ void write_buf(char *buf, size_t size)
 
 int main(int argc, char **argv)
 {
-	FILE *f = NULL;
+	int fd = -1;
 	if (argc > 1)
 	{
-		f = fopen(argv[1], "r");
+		fd = open(argv[1], O_RDONLY);
 	} else if (argc == 1)
 	{
-		f = stdin;
+		fd = STDOUT_FILENO;
 	}
 
-	if (f == NULL)
+	if (fd == -1)
 	{
 		fprintf(stderr, "could not open file for reading: [%d] %s\n", errno, strerror(errno));
 		return EXIT_FAILURE;
@@ -43,7 +44,7 @@ int main(int argc, char **argv)
 	int i = 0;
 	char c[3] = {0};
 	int l = 0;
-	while ((r = read(fileno(f), &buf, buflen)) > 0)
+	while ((r = read(fd, &buf, buflen)) > 0)
 	{
 		printf("%08d: ", l * 10);
 
@@ -79,7 +80,7 @@ int main(int argc, char **argv)
 	}
 
 
-	fclose(f);
+	close(fd);
 
 	return EXIT_SUCCESS;
 }
